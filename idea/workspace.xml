@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="dae62a33-ba77-4bd2-8e25-9b26162011d5" name="Changes" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="useMavenConfig" value="true" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectId" id="2pfpbBlaN4j7PxjU3Uf2kXieuUC" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/4 course/писпп кож/WebApplication3/WebApplication3&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;spring.configuration.checksum&quot;: &quot;9ab2ec7ea4a2041306f7bdf150fcd453&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mysql&quot;
+    ]
+  }
+}</component>
+  <component name="RunManager">
+    <configuration name="TablesApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="tables" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="org.example.tables.TablesApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="dae62a33-ba77-4bd2-8e25-9b26162011d5" name="Changes" comment="" />
+      <created>1733167054351</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1733167054351</updated>
+      <workItem from="1733167055367" duration="932000" />
+      <workItem from="1733168070460" duration="2368000" />
+      <workItem from="1733170666540" duration="9133000" />
+      <workItem from="1733211489687" duration="198000" />
+      <workItem from="1733241398528" duration="4008000" />
+      <workItem from="1733267751474" duration="3783000" />
+      <workItem from="1733931162134" duration="8000" />
+      <workItem from="1734694666426" duration="214000" />
+      <workItem from="1752398399833" duration="93000" />
+      <workItem from="1752559162067" duration="923000" />
+      <workItem from="1759826390197" duration="13000" />
+      <workItem from="1759828278587" duration="1927000" />
+      <workItem from="1760431368873" duration="174000" />
+      <workItem from="1760519942846" duration="30000" />
+      <workItem from="1771947873719" duration="514000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
