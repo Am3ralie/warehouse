@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Компьютерный склад</title>
+    <link rel="shortcut icon" href="/img/logo.png" type="image/x-icon">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.2/xlsx.full.min.js"></script>
+</head>
+<body>
+<header class="header">
+    <nav class="nav">
+        <ul id="logo">
+            <img src="/img/logo-black.png" class="logo">
+            <a href="/" class="nav_logo">Компьютерный склад</a>
+        </ul>
+        <ul>
+            <li class="nav_item">
+                <a href="/admin" th:if="${user.getRole() == T(org.example.tables.Model.Role).ADMIN}">ADMIN PANEL</a>
+                <a href="/help">Помощь</a>
+            </li>
+        </ul>
+        <button id="logout" onclick="window.location.href = '/logout'">Выход</button>
+    </nav>
+</header>
+<button class="openSearch" onclick="openModal()">Поиск по параметрам</button>
+<div class="search-container">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <h2>Поиск оборудования</h2>
+    <input type="text" id="searchName" placeholder="Поиск по названию">
+    <input type="text" id="searchWord" placeholder="Поиск по ключевому слову">
+    <select id="searchCategory">
+        <option value="">Поиск по категории</option>
+    </select>
+    <div class="filterBtn">
+        <button id="filterBtn">Поиск</button>
+    </div>
+</div>
+
+<div class="table-container">
+    <table class="rwd-table">
+        <thead>
+        <tr>
+            <th data-column="id" data-order="desc">ID</th>
+            <th data-column="name" data-order="desc">Название</th>
+            <th data-column="category" data-order="desc">Категория</th>
+            <th data-column="manufacturer" data-order="desc">Производитель</th>
+            <th data-column="model" data-order="desc">Модель</th>
+            <th data-column="quantity" data-order="desc">Количество</th>
+            <th data-column="price" data-order="desc">Стоимость, шт.</th>
+            <th data-column="dateCreate" data-order="desc">Дата поступления</th>
+            <th data-column="state" data-order="desc">Состояние</th>
+            <th>Действие</th>
+        </tr>
+        </thead>
+
+        <tbody class="equipment">
+        </tbody>
+    </table>
+</div>
+<button class="but" onclick="addEquipment()">Добавить оборудование</button>
+<button class="but" id="downloadExcel">Скачать в Excel</button>
+<button class="but" id="printTable">Печать таблицы</button>
+
+
+<div class="table-container" id="category">
+    <table class="rwd-table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Название</th>
+            <th>Действия</th>
+        </tr>
+        </thead>
+        <tbody class="category">
+        </tbody>
+    </table>
+</div>
+<button class="but" id="endBut" onclick="addCategory()">Добавить категорию</button>
+</body>
+<script th:inline="javascript">
+    let categories = [[${categories}]];
+    let equipments = [[${warehouse}]];
+    let searchCategory = document.getElementById("searchCategory");
+    categories.forEach(category => {
+        let option = document.createElement("option");
+        option.value = category.id;
+        option.textContent = category.name;
+        searchCategory.appendChild(option);
+    });
+
+    function formatDate(dateString) {
+        let date = new Date(dateString);
+        let day = String(date.getDate()).padStart(2, '0');
+        let month = String(date.getMonth() + 1).padStart(2, '0');
+        let year = date.getFullYear();
+        return `${day}.${month}.${year}`;
+    }
+
+    function render(equipments) {
+        let html = "";
+        for (let i = 0; i < equipments.length; i++) {
+            html += `<tr>
+                <td>${equipments[i]["id"]}</td>
+                <td>${equipments[i]["name"]}</td>
+                <td>${equipments[i]["category"]["name"]}</td>
+                <td>${equipments[i]["manufacturer"]}</td>
+                <td>${equipments[i]["model"]}</td>
+                <td>${equipments[i]["quantity"]}</td>
+                <td>${equipments[i]["price"]}</td>
+                <td>${formatDate(equipments[i]["dateCreate"])}</td>
+                <td>${equipments[i]["status"]}</td>
+                <td>
+                <button class="edit" onclick="editEquipment(${equipments[i]["id"]})">Редактировать</button>
+                <form action="/equipment/del/${equipments[i]["id"]}" method="post">
+                    <input class="edit" type="submit" value="Удалить">
+                </form>
+            </td>
+            </tr>`;
+        }
+        document.querySelector(".equipment").innerHTML = html;
+    }
+    if (equipments.length === 0) {
+        document.querySelector(".equipment").innerHTML = "<tr><td colspan='10'>Нет данных</td></tr>";
+    }
+
+    render(equipments);
+
+    function renderCategory() {
+        document.querySelector(".category").innerHTML = categories.map(category => `
+        <tr>
+            <td>${category.id}</td>
+            <td>${category.name}</td>
+            <td>
+                <form action="/category/del/${category.id}" method="post">
+                    <input class="edit" type="submit" value="Удалить">
+                </form>
+            </td>
+        </tr>
+    `).join('');
+    }
+
+    renderCategory();
+        document.getElementById("filterBtn").addEventListener("click", function () {
+        let name = document.getElementById("searchName").value.toLowerCase();
+        let categoryId = document.getElementById("searchCategory").value;
+        let keyword = document.getElementById("searchWord").value.toLowerCase();
+
+        let filteredEquipments = [];
+        for (let i = 0; i < equipments.length; i++) {
+        let matchesKeyword = keyword === "" ||
+        (equipments[i]["name"].toLowerCase().includes(keyword) ||
+        equipments[i]["manufacturer"].toLowerCase().includes(keyword) ||
+        equipments[i]["model"].toLowerCase().includes(keyword));
+
+        if ((name === "" || equipments[i]["name"].toLowerCase().includes(name)) &&
+        (categoryId === "" || String(equipments[i]["category"]["id"]) === String(categoryId)) &&
+        matchesKeyword) {
+        filteredEquipments.push(equipments[i]);
+    }
+    }
+
+        render(filteredEquipments);
+    });
+    document.querySelectorAll("thead th[data-column]").forEach(header => {
+        header.addEventListener("click", () => {
+            const column = header.getAttribute("data-column");
+            const order = header.getAttribute("data-order");
+            const newOrder = order === "desc" ? "asc" : "desc";
+            header.setAttribute("data-order", newOrder);
+
+            document.querySelectorAll("thead th[data-column]").forEach(h => {
+                h.textContent = h.textContent.replace(/[\u25B2\u25BC]/g, "");
+            });
+
+            const indicator = newOrder === "asc" ? " ▲" : " ▼";
+            header.textContent += indicator;
+
+            const sortedEquipments = [...equipments].sort((a, b) => {
+                let aValue = column === "category" ? a[column]["name"] : a[column];
+                let bValue = column === "category" ? b[column]["name"] : b[column];
+
+                // Обработка сортировки по дате
+                if (column === "dateCreate") {
+                    aValue = new Date(aValue).getTime();
+                    bValue = new Date(bValue).getTime();
+                }
+
+                // Обработка сортировки по статусу
+                if (column === "state") {
+                    aValue = aValue.toLowerCase();
+                    bValue = bValue.toLowerCase();
+                }
+
+                // Сравнение строк
+                if (typeof aValue === "string") {
+                    aValue = aValue.toLowerCase();
+                    bValue = bValue.toLowerCase();
+                }
+
+                if (newOrder === "asc") {
+                    return aValue > bValue ? 1 : aValue < bValue ? -1 : 0;
+                } else {
+                    return aValue < bValue ? 1 : aValue > bValue ? -1 : 0;
+                }
+            });
+
+            render(sortedEquipments);
+        });
+    });
+
+
+
+    function addEquipment() {
+        let name = prompt("Введите название (МФУ):");
+        if (!name) return alert("Название не может быть пустым!");
+
+        let categoryId = parseInt(prompt("Введите ID категории (5):"));
+        if (isNaN(categoryId)) return alert("Некорректный ID категории!");
+        let categoryExists = categories.some(category => category.id === categoryId);
+        if (!categoryExists) return alert("Категория с таким ID не найдена!");
+        let manufacturer = prompt("Введите производителя (Canon):");
+        if (!manufacturer) return alert("Производитель не может быть пустым!");
+
+        let model = prompt("Введите модель (MP-210):");
+        if (!model) return alert("Модель не может быть пустой!");
+
+        let quantity = parseInt(prompt("Введите количество (10):"));
+        if (isNaN(quantity) || quantity <= 0) return alert("Количество должно быть положительным числом!");
+
+        let price = parseFloat(prompt("Введите стоимость за шт (100.99):"));
+        if (isNaN(price) || price <= 0) return alert("Стоимость должна быть положительным числом!");
+
+        let status = prompt("Введите статус (Используется):");
+        if (!status) return alert("Статус не может быть пустым!");
+
+        let equipmentData = {
+            name,
+            category: { id: categoryId },
+            manufacturer,
+            model,
+            quantity,
+            price,
+            status,
+            dateCreate: new Date().toISOString()
+        };
+
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", "/equipment", true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                equipments = JSON.parse(xhr.responseText);
+                render(equipments);
+            }
+        };
+        xhr.send(JSON.stringify(equipmentData));
+    }
+
+    function addCategory() {
+        let categoryName = prompt("Введите название категории:");
+        if (!categoryName) return alert("Название категории не может быть пустым!");
+
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", "/category", true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                try {
+                    categories = JSON.parse(xhr.responseText);
+                    renderCategory();
+                    let searchCategory = document.getElementById("searchCategory");
+                    searchCategory.innerHTML = "";
+                    categories.forEach(category => {
+                        let option = document.createElement("option");
+                        option.value = category.id;
+                        option.textContent = category.name;
+                        searchCategory.appendChild(option);
+                    });
+                } catch (error) {
+                    console.error("Ошибка при обновлении категорий:", error);
+                }
+            }
+        };
+        xhr.send(JSON.stringify({ name: categoryName }));
+    }
+
+    function editEquipment(id) {
+        const equipment = equipments.find(equip => equip.id === id);
+        if (!equipment) {
+            return alert("Оборудование с таким ID не найдено!");
+        }
+
+        let updatedEquipmentData = {
+            name: prompt("Введите название:", equipment.name),
+            category: {
+                id: parseInt(prompt("Введите ID категории:", equipment.category.id))
+            },
+            manufacturer: prompt("Введите бренд:", equipment.manufacturer),
+            model: prompt("Введите модель:", equipment.model),
+            quantity: parseInt(prompt("Введите количество:", equipment.quantity)),
+            price: parseFloat(prompt("Введите стоимость за шт:", equipment.price)),
+            status: prompt("Введите статус:", equipment.status),
+            dateCreate: equipment.dateCreate // сохраняем оригинальную дату
+        };
+
+        // Проверка на существование категории
+        let categoryExists = categories.some(category => category.id === updatedEquipmentData.category.id);
+        if (!categoryExists) {
+            return alert("Категория с таким ID не найдена!");
+        }
+
+        // Дополнительные проверки на корректность данных
+        if (!updatedEquipmentData.name) {
+            return alert("Название не может быть пустым!");
+        }
+        if (isNaN(updatedEquipmentData.category.id)) {
+            return alert("Некорректный ID категории!");
+        }
+        if (!updatedEquipmentData.manufacturer) {
+            return alert("Производитель не может быть пустым!");
+        }
+        if (!updatedEquipmentData.model) {
+            return alert("Модель не может быть пустой!");
+        }
+        if (isNaN(updatedEquipmentData.quantity) || updatedEquipmentData.quantity <= 0) {
+            return alert("Количество должно быть положительным числом!");
+        }
+        if (isNaN(updatedEquipmentData.price) || updatedEquipmentData.price <= 0) {
+            return alert("Стоимость должна быть положительным числом!");
+        }
+        if (!updatedEquipmentData.status) {
+            return alert("Статус не может быть пустым!");
+        }
+
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", `/equipment/${id}`, true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    try {
+                        equipments = JSON.parse(xhr.responseText);
+                        render(equipments);
+                    } catch (error) {
+                        console.error("Ошибка при разборе JSON:", error);
+                        console.error("Ответ сервера:", xhr.responseText);
+                    }
+                } else {
+                    console.error(`Ошибка: ${xhr.status}`);
+                    alert("Не удалось обновить оборудование. Проверьте данные и повторите попытку.");
+                }
+            }
+        };
+        xhr.send(JSON.stringify(updatedEquipmentData));
+    }
+
+    document.getElementById('downloadExcel').addEventListener('click', function () {
+        let equipmentsData = equipments.map(equip => ({
+            ID: equip.id,
+            Название: equip.name,
+            Категория: equip.category.name,
+            Производитель: equip.manufacturer,
+            Модель: equip.model,
+            Количество: equip.quantity,
+            Стоимость: equip.price,
+            "Дата поступления": formatDate(equip.dateCreate),
+            Состояние: equip.status
+        }));
+
+        const ws = XLSX.utils.json_to_sheet(equipmentsData);
+
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Оборудование");
+
+        XLSX.writeFile(wb, "equipment.xlsx");
+    });
+    document.getElementById('printTable').addEventListener('click', function () {
+        // Скрыть колонку "Действие" перед печатью
+        let ths = document.querySelectorAll("th:nth-child(10), td:nth-child(10)");
+        ths.forEach(th => th.style.display = 'none');
+
+        // Печать
+        let table = document.querySelector('.rwd-table');
+        let printWindow = window.open('', '', 'height=600,width=800');
+
+        printWindow.document.write('<html><head><title>Печать таблицы</title>');
+        printWindow.document.write('<style>');
+        printWindow.document.write('table { width: 100%; border-collapse: collapse; }');
+        printWindow.document.write('th, td { border: 1px solid black; padding: 8px; text-align: left; }');
+        printWindow.document.write('th { background-color: #f2f2f2; }');
+        printWindow.document.write('</style>');
+        printWindow.document.write('</head><body>');
+        printWindow.document.write(table.outerHTML);
+        printWindow.document.write('</body></html>');
+        printWindow.document.close();
+        printWindow.print();
+
+        // Восстановить видимость после печати
+        setTimeout(() => {
+            ths.forEach(th => th.style.display = '');  // Снимаем скрытие
+        }, 500);
+    });
+
+
+</script>
+<script>
+    function openModal() {
+        const searchContainer = document.getElementsByClassName("search-container")[0];
+        searchContainer.style.display = "flex"; // Сначала делаем видимым для работы анимации
+        setTimeout(() => {
+            searchContainer.classList.add("show");
+            let but = document.getElementsByClassName("openSearch")[0];
+            but.style.display = "none";
+        }, 10);
+    }
+
+    function closeModal() {
+        const searchContainer = document.getElementsByClassName("search-container")[0];
+        searchContainer.classList.remove("show"); // Убираем класс с анимацией
+        setTimeout(() => {
+            searchContainer.style.display = "none"; // После завершения анимации скрываем элемент
+            let but = document.getElementsByClassName("openSearch")[0];
+            but.style.display = "block";
+        }, 200); // Убедитесь, что время совпадает с transition
+    }
+
+</script>
+
+</html>

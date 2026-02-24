@@ -1,0 +1,271 @@
+@import url('https://fonts.googleapis.com/css?family=Abel|Abril+Fatface|Alegreya|Arima+Madurai|Dancing+Script|Dosis|Merriweather|Oleo+Script|Overlock|PT+Serif|Pacifico|Playball|Playfair+Display|Share|Unica+One|Vibur');
+@import url("https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap");
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  color: #3c3939;
+}
+
+body {
+  font-family: "Comfortaa", sans-serif;
+  background-image: linear-gradient(to top, #a8edea 0%, #fed6e3 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  
+}
+a {
+  text-decoration: none;
+}
+
+.header {
+  margin-bottom: 20px;
+  height: 80px;
+  width: 100%;
+  font-weight: 700;
+  background-image: linear-gradient(-225deg, #E3FDF5 50%, #FFE6FA 50%);
+  color: #333;
+  z-index: 100;
+  padding: 0 20px;
+}
+
+.nav {
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.nav,
+.nav_item {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav_logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 25px;
+  margin-left: 25px;
+}
+
+.nav_item {
+  column-gap: 65px;
+}
+
+.nav_logo,
+a,
+.button {
+  transition: all 0.5s;
+}
+
+a:hover {
+  color: #000000;
+}
+
+.logo {
+  width: 50px;
+  transition: 1s;
+}
+
+.logo:hover {
+  transform: scale(1.1);
+}
+ul#logo {
+  display: flex;
+  align-items: center;
+}
+.table-container {
+  max-height: 50vh;
+  width: 97vw;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 13px;
+  margin: 20px 0;
+}
+#category {
+  width: 50vw;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 15px;
+  text-align: center;
+}
+
+th {
+  color: #333;
+  cursor: pointer;
+}
+thead {
+  background-image: linear-gradient(-225deg, #E3FDF5 50%, #FFE6FA 50%);
+}
+#category th{
+  cursor: default;
+}
+#downloadExcel,#printTable{
+  margin-top: 20px;
+}
+td {
+  border-bottom: 1px solid #ddd;
+  background-color: #ffffff;
+  color: #666;
+}
+
+.table-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+  background-image: linear-gradient(-225deg, #E3FDF5 50%, #FFE6FA 50%);
+  border-radius: 10px;
+}
+
+.table-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.search-container input,
+select {
+  padding: 10px;
+  width: 330px;
+  border: 1px solid #a445b2;
+  border-radius: 5px;
+  font-family: "Comfortaa", sans-serif;
+  font-size: 16px;
+  color: #3c3939;
+  background-color: #ffffff;
+  transition: border-color 0.3s;
+  margin: 5px 0;
+}
+
+.search-container input:focus {
+  outline: none;
+  border-color: #fa4299;
+}
+
+.search-container button,
+.edit-button,
+.home-button,
+.but,.edit,
+#logout,.openSearch,.but {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  background: white;
+  color: #333;
+  font-family: "Comfortaa", sans-serif;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.5s ease;
+}
+.edit{
+  border: 2px solid #333;
+  width: 100%;
+  margin: 3px 0;
+}
+.search-container button:hover,
+#logout:hover,.edit:hover,
+.but:hover,.openSearch:hover,.but:hover  {
+  animation: ani9 0.4s ease-in-out infinite alternate;
+
+}
+
+#logout {
+  border: 2px solid #333;
+  padding: 12px 18px;
+  font-size: 17px;
+  background: #FFE6FA;
+}
+#endBut{
+  margin-bottom: 20px;
+}
+.search-container {
+  position: relative;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.253);
+  padding: 20px 30px;
+  border-radius: 13px;
+  background-image: linear-gradient(-225deg, #E3FDF5 50%, #FFE6FA 50%);
+  display: none; 
+  opacity: 0; /* Прозрачность 0 */
+  transform: scale(0.95); /* Уменьшенный размер */
+  transition: opacity 0.5s ease, transform 0.2s ease; /* Плавные переходы */
+}
+
+.search-container.show {
+  display: flex; /* Отображаем окно */
+  opacity: 1; /* Полная видимость */
+  transform: scale(1); /* Нормальный размер */
+}
+
+.search-container h2 {
+  font-size: 22px;
+  margin: 0 0 10px 0;
+}
+h2{
+  font-family: 'Playfair Display', serif;
+}
+.button-container {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+button#filterBtn {
+  margin-top: 10px;
+}
+.openSearch {
+  margin-bottom: 10px;
+}
+.edit-button {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  cursor: pointer;
+}
+
+.home-button {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  cursor: pointer;
+}
+
+td .but {
+  width: 100%;
+  margin: 2px auto;
+}
+.close {
+  position: absolute; /* Устанавливаем абсолютное позиционирование */
+  top: 10px; /* Отступ сверху */
+  right: 20px;
+  color: #333;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #5e5e5e;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+@keyframes ani9 {
+  0% {
+      transform: translateY(3px);
+  }
+  100% {
+      transform: translateY(5px);
+  }
+}

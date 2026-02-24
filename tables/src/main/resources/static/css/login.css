@@ -1,0 +1,118 @@
+@import url('https://fonts.googleapis.com/css?family=Abel|Abril+Fatface|Alegreya|Arima+Madurai|Dancing+Script|Dosis|Merriweather|Oleo+Script|Overlock|PT+Serif|Pacifico|Playball|Playfair+Display|Share|Unica+One|Vibur');
+@import url("https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap");
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-image: linear-gradient(to top, #a8edea 0%, #fed6e3 100%);
+    background-attachment: fixed;
+    background-repeat: no-repeat;  
+    font-family: "Comfortaa", sans-serif;
+    opacity: .95;
+}
+
+form {
+    width: 465px;
+    min-height: 470px;
+    height: auto;
+    border-radius: 5px;
+    margin: 7.5% auto;
+    box-shadow: 0 9px 50px hsla(20, 67%, 75%, 0.31);
+    padding: 2%;
+    background-image: linear-gradient(-225deg, #E3FDF5 50%, #FFE6FA 50%);
+}
+
+form .con {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+header {
+    margin: 2% auto 10% auto;
+    text-align: center;
+}
+
+header h2 {
+    font-size: 250%;
+    font-family: 'Playfair Display', serif;
+    color: #3e403f;
+    padding-bottom: 20px;
+}
+
+header p {
+    letter-spacing: 0.05em;
+}
+
+.input-item {
+    background: #fff;
+    color: #333;
+    border-radius: 5px 0px 0px 5px;
+} 
+
+input[class="form-input"] {
+    width: 250px;
+    height: 50px;
+    margin-top: 2%;
+    padding: 15px;
+    font-size: 16px;
+    font-family: "Comfortaa", sans-serif;
+    color: #5E6472;
+    outline: none;
+    border: none;
+    border-radius: 0px 5px 5px 0px;
+    transition: 0.2s linear;
+}
+.field-set {
+  display: flex
+;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+input:focus {
+    transform: scale(1.01);
+    border-radius: 5px;
+}
+
+button {
+    display: inline-block;
+    font-family: "Comfortaa", sans-serif;
+    font-size: 20px;
+    color: #252537;
+    width: 200px;
+    height: 50px;
+    padding: 0 20px;
+    background: #fff;
+    border-radius: 5px;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s linear;
+    margin: 7% auto;
+    letter-spacing: 0.05em;
+}
+
+button:hover {
+    transform: translatey(3px);
+    box-shadow: none;
+}
+
+button:hover {
+    animation: ani9 0.4s ease-in-out infinite alternate;
+}
+
+
+@keyframes ani9 {
+    0% {
+        transform: translateY(3px);
+    }
+    100% {
+        transform: translateY(5px);
+    }
+}

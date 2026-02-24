@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/admin.css">
+    <title>Admin панель</title>
+    <link rel="shortcut icon" href="/img/logo.png" type="image/x-icon">
+</head>
+
+<body>
+<header class="header">
+    <nav class="nav">
+        <ul id="logo">
+            <img src="/img/logo-black.png" class="logo">
+            <a href="/" class="nav_logo">Компьютерный склад</a>
+        </ul>
+        <ul>
+            <li class="nav_item">
+                <a href="storage">Склад</a>
+            </li>
+        </ul>
+        <button id="logout" onclick="window.location.href = '/logout'">Выход</button>
+    </nav>
+</header>
+<div class="overlay">
+    <form method="post" action="/admin/reg" th:object="${reg_form}" onsubmit="return validateForm()">
+        <div class="con">
+            <header class="head-form">
+                <h2>Регистрация пользователя</h2>
+            </header>
+            <div class="field-set">
+                <input class="form-input" id="txt-input" type="text" placeholder="ФИО" required th:field="*{FIO}">
+                <br>
+                <input class="form-input" id="txt-input" type="text" placeholder="Логин" required th:field="*{login}">
+                <br>
+                <input class="form-input" type="password" placeholder="Пароль" id="pwd" name="password" required th:field="*{password}">
+                <br>
+                <div th:text="${err_reg}" style="color: red;text-align: center"></div>
+                <button type="submit" class="log-in">Регистрация</button>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="overlay">
+    <form method="post" action="admin/edit" th:object="${edit_form}">
+        <div class="con">
+            <header class="head-form">
+                <h2>Изменение пользователей</h2>
+            </header>
+            <div class="field-set">
+                <div th:text="${err_edit}" style="color: red;text-align: center"></div>
+                <select id="user-select" class="form-input" onchange="toggleFields()">
+                    <option value="none">Выберите пользователя:</option>
+                    <option th:each="login : ${user_logins} " id="login2"
+                            th:value="${login}"
+                            th:text="${login}">
+                    </option>
+                </select>
+                <br>
+                <input class="form-input" id="old-login" type="hidden" required th:field="*{oldLogin}">
+                <div id="edit-fields" style="display: none;">
+                    <input class="form-input" id="edit-fio" type="text" placeholder="ФИО" required th:field="*{FIO}">
+                    <br>
+                    <input class="form-input" id="edit-login" type="text" placeholder="Логин" required
+                           th:field="*{login}">
+                    <br>
+                    <input class="form-input" type="password" placeholder="Пароль" id="edit-pwd" name="password"
+                           th:field="*{password}">
+                    <br>
+                    <button class="log-in">Сохранить изменения</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script th:inline="javascript">
+    function toggleFields() {
+        const userSelect = document.getElementById("user-select");
+        const editFields = document.getElementById("edit-fields");
+        if (userSelect.value === "none") {
+            editFields.style.display = "none";
+        } else {
+            editFields.style.display = "flex";
+            editFields.style.flexWrap = "wrap";
+            editFields.style.justifyContent = "center";
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', 'http://localhost:8080/admin/getUser/' + userSelect.value, true);
+            xhr.onload = function () {
+                var user = JSON.parse(xhr.response)
+                loadEditForm(user)
+            };
+            xhr.send();
+        }
+    }
+
+    function loadEditForm(user) {
+        document.getElementById("edit-fio").value = user["name"]
+        document.getElementById("edit-login").value = user["login"]
+        document.getElementById("old-login").value = user["login"]
+        document.getElementById("edit-pwd").value = user["password"]
+    }
+
+</script>
+<script>
+    function validateForm() {
+        const fio = document.getElementById("txt-input").value;
+        const login = document.querySelector('input[name="login"]').value;
+        const password = document.getElementById("pwd").value;
+
+        const fioRegex = /^[А-Яа-яЁё\s]+$/;
+        if (!fioRegex.test(fio)) {
+            alert("Имя должно содержать только русские буквы и пробелы.");
+            return false;
+        }
+
+        if (fio.trim() !== fio) {
+            alert("Имя не может начинаться или заканчиваться пробелом.");
+            return false;
+        }
+
+        // Проверка логина: только буквы, цифры и подчеркивания
+        const loginRegex = /^[a-zA-Z0-9_]+$/;
+        if (!loginRegex.test(login)) {
+            alert("Логин может содержать только буквы, цифры и подчеркивания.");
+            return false;
+        }
+
+        // Проверка логина: не должно быть пробелов
+        if (login.includes(" ")) {
+            alert("Логин не может содержать пробелы.");
+            return false;
+        }
+
+        // Проверка пароля: не должно быть пробела
+        if (password.includes(" ")) {
+            alert("Пароль не может содержать пробелы.");
+            return false;
+        }
+
+        // Если все проверки пройдены, возвращаем true
+        return true;
+    }
+
+</script>
+
+</body>
+
+</html>

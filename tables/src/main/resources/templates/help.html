@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Помощь</title>
+    <link rel="shortcut icon" href="/img/logo.png" type="image/x-icon">
+    <link rel="stylesheet" href="/css/help.css">
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <ul id="logo">
+                <img src="/img/logo-black.png" class="logo">
+                <a href="/" class="nav_logo">Компьютерный склад</a>
+            </ul>
+            <ul>
+                <li class="nav_item">
+                    <a href="/storage">Склад</a>
+                </li>
+            </ul>
+            <button id="logout" onclick="window.location.href = '/logout'">Выход</button>
+        </nav>
+    </header>
+    <main>
+        <section class="hero">
+            <h2>Часто задаваемые вопросы</h2>
+
+            <div class="faq-item">
+                <h3>1. Как я могу добавить дополнительное оборудование?</h3>
+                <p>Для этого вам нужно перейти на страницу склада и нажать на соответствующюю кнопку под таблицей.</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>2. Как изменить пароль?</h3>
+                <p>Для этого вам нужно обратиться к администратору.</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>3. Как проверить наличие оборудования на складе?</h3>
+                <p>Вы можете воспользоваться поиском на странице склада.</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>4. Можно ли изменить категории оборудования?</h3>
+                <p>Да, можно. Для этого нужно вам нужно перейти на страницу склада и нажать на соответствующюю кнопку под таблицей. </p>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

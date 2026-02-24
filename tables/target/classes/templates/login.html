@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <title>Авторизация</title>
+    <link rel="stylesheet" href="/css/login.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/img/logo.png" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css?family=Abel|Playfair+Display|Vibur" rel="stylesheet">
+</head>
+<body>
+    <div class="overlay">
+        <form method="post" th:object="${login_form}">
+            <div class="con">
+                <header class="head-form">
+                    <h2>Вход</h2>
+                    <p>Войдите, используя логин и пароль пользователя</p>
+                </header>
+                <div class="field-set">
+                    <input class="form-input" id="txt-input" type="text" placeholder="Логин" required th:field="*{login}">
+                    <br>
+                    <input class="form-input" type="password" placeholder="Пароль" id="pwd" name="password" required th:field="*{password}">
+                    <br>
+                    <button class="log-in">Вход</button>
+                    <div th:text="${err}" style="color: red;text-align: center"> </div>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</body>
+</html>
