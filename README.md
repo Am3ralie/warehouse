@@ -26,5 +26,6 @@
 Страница входа
 ![Login Interface](tables/src/main/resources/static/img/screenshot/login.png)
 
-Главная страницв
+
+Главная страница
 ![Main Page](tables/src/main/resources/static/img/screenshot/main.png)
